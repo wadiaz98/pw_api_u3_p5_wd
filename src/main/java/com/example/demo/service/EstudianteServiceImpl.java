@@ -21,7 +21,7 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	@Override
 	public void actualizar(Estudiante estudiante) {
 		// TODO Auto-generated method stub
-		this.actualizar(estudiante);
+		this.estudianteRepository.actualizar(estudiante);
 	}
 
 	@Override
