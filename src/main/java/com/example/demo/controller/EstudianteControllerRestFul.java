@@ -1,13 +1,17 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
@@ -27,10 +31,23 @@ public class EstudianteControllerRestFul {
 	private IEstudianteService estudianteService;
 
 	// Métodos: Capacidades
+	
+	//Path Variable registro único
+	//http://pokemon.com/API/v1/jugadores/pokemon/consultar/3
+	//.../consultar/3
+	//...../consultar/{3}
+	
 	// GET
-	@GetMapping(path = "/buscar")
-	public Estudiante buscar() {
-		return this.estudianteService.buscar(10);
+	@GetMapping(path = "/buscar/{id}")
+	public Estudiante buscar(@PathVariable Integer id) {
+		return this.estudianteService.buscar(id);
+	}
+	
+	//@RequestParam -> filtrar en un conjunto o lista de datos
+	//http://pokemon.com/API/v1/jugadores/pokemon/consultar?genero=M
+	@GetMapping(path = "/buscarTodos")
+	public List<Estudiante> buscarTodos(@RequestParam String genero){
+		return this.estudianteService.buscarTodos(genero);
 	}
 
 	@PostMapping(path = "/guardar")
@@ -48,9 +65,9 @@ public class EstudianteControllerRestFul {
 		this.estudianteService.actualizarParcial( estudiante.getApellido(),estudiante.getNombre(), estudiante.getId());
 	}
 	
-	@DeleteMapping(path = "/borrar")
-	public void borrar() {
-		this.estudianteService.eliminar(10);
+	@DeleteMapping(path = "/borrar/{id}")
+	public void borrar(@PathVariable Integer id) {
+		this.estudianteService.eliminar(id);
 		
 	}
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
