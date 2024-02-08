@@ -3,6 +3,10 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,48 +35,58 @@ public class EstudianteControllerRestFul {
 	private IEstudianteService estudianteService;
 
 	// Métodos: Capacidades
-	
-	//Path Variable registro único
-	//http://pokemon.com/API/v1/jugadores/pokemon/consultar/3
-	//.../consultar/3
-	//...../consultar/{3}
-	
-	//http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
+
+	// Path Variable registro único
+	// http://pokemon.com/API/v1/jugadores/pokemon/consultar/3
+	// .../consultar/3
+	// ...../consultar/{3}
+
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
 	// GET
-	@GetMapping(path = "/{id}")
-	public Estudiante buscar(@PathVariable Integer id) {
-		return this.estudianteService.buscar(id);
-	}
-	
-	//@RequestParam -> filtrar en un conjunto o lista de datos
-	//http://pokemon.com/API/v1/jugadores/pokemon/consultar?genero=M
-	//http://localhost:8080/API/v1.0/Matricula/estudiantes{genero} GET
-	@GetMapping
-	public List<Estudiante> buscarTodos(@RequestParam(required = false, defaultValue = "M") String genero){
-		return this.estudianteService.buscarTodos(genero);
+	@GetMapping(path = "/{id}", produces = "application/xml")
+	public ResponseEntity<Estudiante> buscar(@PathVariable Integer id) {
+		// 240: grupo de solicitud satisfactoria
+		// 240: Recurso Estudiante encontrado satisfactoriamente
+		Estudiante estu = this.estudianteService.buscar(id);
+		// 200: ok
+		// 401: autenticación
+
+		return ResponseEntity.status(241).body(estu);
 	}
 
-	@PostMapping
+	// @RequestParam -> filtrar en un conjunto o lista de datos
+	// http://pokemon.com/API/v1/jugadores/pokemon/consultar?genero=M
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes{genero} GET
+	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<List<Estudiante>> buscarTodos(
+			@RequestParam(required = false, defaultValue = "M") String genero) {
+		List<Estudiante> lista = this.estudianteService.buscarTodos(genero);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_242", "Lista consultada de maneras exitosa");
+		return new ResponseEntity<>(lista, cabeceras, 242);
+	}
+
+	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
-	
-	@PutMapping(path = "/{id}")
+
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
 		estudiante.setId(id);
 		this.estudianteService.actualizar(estudiante);
 	}
-	
-	@PatchMapping(path = "/{id}")
+
+	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
-		this.estudianteService.actualizarParcial( estudiante.getApellido(),estudiante.getNombre(), id);
+		this.estudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), id);
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	public void borrar(@PathVariable Integer id) {
 		this.estudianteService.eliminar(id);
-		
+
 	}
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
-	
+
 }
