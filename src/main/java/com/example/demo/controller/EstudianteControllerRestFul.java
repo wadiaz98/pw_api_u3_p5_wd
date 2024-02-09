@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteTO;
+import com.example.demo.service.to.MateriaTO;
 
 //Una API puede tener muchos servicios
 //API: determinada por el proyecto Java
@@ -34,6 +37,8 @@ public class EstudianteControllerRestFul {
 	@Autowired
 	private IEstudianteService estudianteService;
 
+	@Autowired
+	private IMateriaService iMateriaService;
 	// Métodos: Capacidades
 
 	// Path Variable registro único
@@ -57,7 +62,8 @@ public class EstudianteControllerRestFul {
 	// @RequestParam -> filtrar en un conjunto o lista de datos
 	// http://pokemon.com/API/v1/jugadores/pokemon/consultar?genero=M
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes{genero} GET
-	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_XML_VALUE)
+
 	public ResponseEntity<List<Estudiante>> buscarTodos(
 			@RequestParam(required = false, defaultValue = "M") String genero) {
 		List<Estudiante> lista = this.estudianteService.buscarTodos(genero);
@@ -88,5 +94,22 @@ public class EstudianteControllerRestFul {
 
 	}
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
+
+	// ------------------------HATEOAS
+	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<List<EstudianteTO>> buscarTodosHateoas() {
+		List<EstudianteTO> lista = this.estudianteService.buscarTodosTO();
+
+		return ResponseEntity.status(HttpStatus.OK).body(lista);
+	}
+
+	// http://localhost:8080//API/v1.0/Matricula/estudiantes/ GET
+	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1 GET
+	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1/materias GET
+	@GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MateriaTO>> consultarMateriaPorId(@PathVariable Integer id) {
+		List<MateriaTO> lista = this.iMateriaService.buscarPorIdMateria(id);
+		return ResponseEntity.status(HttpStatus.OK).body(lista);
+	}
 
 }
