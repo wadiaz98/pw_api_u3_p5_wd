@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,11 +52,17 @@ public class EstudianteControllerRestFul {
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
 	// GET
-	@GetMapping(path = "/{id}", produces = "application/xml")
-	public ResponseEntity<Estudiante> buscar(@PathVariable Integer id) {
+	@GetMapping(path = "/{id}", produces = "application/json")
+	public ResponseEntity<EstudianteTO> buscar(@PathVariable Integer id) {
 		// 240: grupo de solicitud satisfactoria
 		// 240: Recurso Estudiante encontrado satisfactoriamente
-		Estudiante estu = this.estudianteService.buscar(id);
+		EstudianteTO estu = this.estudianteService.buscarTO(id);
+		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).consultarMateriaPorId(estu.getId()))
+				.withRel("materias");
+		Link link2 = linkTo(methodOn(EstudianteControllerRestFul.class).consultarMateriaPorId(estu.getId()))
+				.withSelfRel();
+		estu.add(link);
+		estu.add(link2);
 		// 200: ok
 		// 401: autenticación
 
@@ -96,16 +106,23 @@ public class EstudianteControllerRestFul {
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
 
 	// ------------------------HATEOAS
-	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<EstudianteTO>> buscarTodosHateoas() {
 		List<EstudianteTO> lista = this.estudianteService.buscarTodosTO();
 
+		for (EstudianteTO est : lista) {
+			Link link = linkTo(methodOn(EstudianteControllerRestFul.class).consultarMateriaPorId(est.getId()))
+					.withRel("materias");
+			est.add(link);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
 	// http://localhost:8080//API/v1.0/Matricula/estudiantes/ GET
 	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1 GET
 	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1/materias GET
+	// http://localhost:8080//API/v1.0/Matricula/materias/estudiantes/1/materias ->
+	// esta mal
 	@GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MateriaTO>> consultarMateriaPorId(@PathVariable Integer id) {
 		List<MateriaTO> lista = this.iMateriaService.buscarPorIdMateria(id);

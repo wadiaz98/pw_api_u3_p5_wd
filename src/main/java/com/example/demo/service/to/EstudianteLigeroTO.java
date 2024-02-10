@@ -2,21 +2,20 @@ package com.example.demo.service.to;
 
 import java.io.Serializable;
 
-public class MateriaTO implements Serializable {
+public class EstudianteLigeroTO implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	private Integer id;
 
 	private String nombre;
 
-	private Integer credito;
+	private String apellido;
 
-	// SET Y GET
-
+	// Set y get
 	public Integer getId() {
 		return id;
 	}
@@ -33,16 +32,15 @@ public class MateriaTO implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public Integer getCredito() {
-		return credito;
+	public String getApellido() {
+		return apellido;
 	}
 
-	public void setCredito(Integer credito) {
-		this.credito = credito;
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 }
