@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
 import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteLigeroTO;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -82,19 +83,19 @@ public class EstudianteControllerRestFul {
 		return new ResponseEntity<>(lista, cabeceras, 242);
 	}
 
-	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
-	public void guardar(@RequestBody Estudiante estudiante) {
-		this.estudianteService.guardar(estudiante);
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void guardar(@RequestBody EstudianteTO estudiante) {
+		this.estudianteService.guardarTO(estudiante);
 	}
 
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
+	public void actualizar(@RequestBody EstudianteTO estudiante, @PathVariable Integer id) {
 		estudiante.setId(id);
-		this.estudianteService.actualizar(estudiante);
+		this.estudianteService.actualizarTO(estudiante);
 	}
 
 	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
+	public void actualizarParcial(@RequestBody EstudianteTO estudiante, @PathVariable Integer id) {
 		this.estudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), id);
 	}
 
@@ -118,15 +119,27 @@ public class EstudianteControllerRestFul {
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
-	// http://localhost:8080//API/v1.0/Matricula/estudiantes/ GET
-	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1 GET
-	// http://localhost:8080//API/v1.0/Matricula/estudiantes/1/materias GET
-	// http://localhost:8080//API/v1.0/Matricula/materias/estudiantes/1/materias ->
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/ GET
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/1 GET
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/1/materias GET
+	// http://localhost:8080/API/v1.0/Matricula/materias/estudiantes/1/materias ->
 	// esta mal
 	@GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MateriaTO>> consultarMateriaPorId(@PathVariable Integer id) {
 		List<MateriaTO> lista = this.iMateriaService.buscarPorIdMateria(id);
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
+	}
+
+	// --------------Deber-----------------------------------------------
+	// URL: http://localhost:8080/API/v1.0/Matricula/estudiantes/1/ligero
+	@GetMapping(path = "/{id}/ligero", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EstudianteLigeroTO> buscarLigero(@PathVariable Integer id) {
+
+		EstudianteLigeroTO estudianteLigeroTO = this.estudianteService.buscarLigero(id);
+		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).buscar(estudianteLigeroTO.getId()))
+				.withSelfRel();
+		estudianteLigeroTO.add(link);
+		return ResponseEntity.status(HttpStatus.OK).body(estudianteLigeroTO);
 	}
 
 }

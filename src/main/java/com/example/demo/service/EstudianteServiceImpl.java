@@ -58,7 +58,7 @@ public class EstudianteServiceImpl implements IEstudianteService {
 		// TODO Auto-generated method stub
 		List<Estudiante> lista = this.estudianteRepository.seleccionarTodos("M");
 		List<EstudianteTO> listaFinal = new ArrayList<>();
-		for(Estudiante est: lista) {
+		for (Estudiante est : lista) {
 			listaFinal.add(this.convertir(est));
 		}
 		return listaFinal;
@@ -71,6 +71,12 @@ public class EstudianteServiceImpl implements IEstudianteService {
 		estuTO.setGenero(estudiante.getGenero());
 		estuTO.setId(estudiante.getId());
 		estuTO.setNombre(estudiante.getNombre());
+		estuTO.setNacionalidad(estudiante.getNacionalidad());
+		estuTO.setCedula(estudiante.getCedula());
+		estuTO.setDireccion(estudiante.getDireccion());
+		estuTO.setEdad(estudiante.getEdad());
+		estuTO.setEstadoCivil(estudiante.getEstadoCivil());
+		estuTO.setLugarNacimiento(estudiante.getLugarNacimiento());
 		return estuTO;
 	}
 
@@ -81,8 +87,47 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	}
 
 	@Override
-	public EstudianteLigeroTO buscarLigeroTO(Estudiante estudiante) {
+	public EstudianteLigeroTO buscarLigero(Integer id) {
 		// TODO Auto-generated method stub
-		return null;
+
+		return this.convertirLigeroTO(this.estudianteRepository.seleccionar(id));
 	}
+
+	public EstudianteLigeroTO convertirLigeroTO(Estudiante estudiante) {
+		// TODO Auto-generated method stub
+		EstudianteLigeroTO ligeroTO = new EstudianteLigeroTO();
+		ligeroTO.setId(estudiante.getId());
+		ligeroTO.setNombre(estudiante.getNombre());
+		ligeroTO.setApellido(estudiante.getApellido());
+		return ligeroTO;
+	}
+
+	public Estudiante conversion(EstudianteTO estudiante) {
+		Estudiante estu = new Estudiante();
+		estu.setApellido(estudiante.getApellido());
+		estu.setFechaNacimiento(estudiante.getFechaNacimiento());
+		estu.setGenero(estudiante.getGenero());
+		estu.setNombre(estudiante.getNombre());
+		estu.setId(estudiante.getId());
+		estu.setNacionalidad(estudiante.getNacionalidad());
+		estu.setCedula(estudiante.getCedula());
+		estu.setDireccion(estudiante.getDireccion());
+		estu.setEdad(estudiante.getEdad());
+		estu.setEstadoCivil(estudiante.getEstadoCivil());
+		estu.setLugarNacimiento(estudiante.getLugarNacimiento());
+		return estu;
+	}
+
+	@Override
+	public void guardarTO(EstudianteTO estudianteTO) {
+		// TODO Auto-generated method stub
+		this.estudianteRepository.insertar(this.conversion(estudianteTO));
+	}
+
+	@Override
+	public void actualizarTO(EstudianteTO estudianteTO) {
+		// TODO Auto-generated method stub
+		this.estudianteRepository.actualizar(this.conversion(estudianteTO));
+	}
+
 }

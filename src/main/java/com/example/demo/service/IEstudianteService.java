@@ -11,7 +11,11 @@ public interface IEstudianteService {
 	// Create, Read, Uopdate, Delete
 	public void guardar(Estudiante estudiante);
 
+	public void guardarTO(EstudianteTO estudianteTO);
+
 	public void actualizar(Estudiante estudiante);
+
+	public void actualizarTO(EstudianteTO estudianteTO);
 
 	public void actualizarParcial(String apellido, String nombre, Integer id);
 
@@ -25,5 +29,6 @@ public interface IEstudianteService {
 
 	public void eliminar(Integer id);
 
-	public EstudianteLigeroTO buscarLigeroTO(Estudiante estudiante);
+	public EstudianteLigeroTO buscarLigero(Integer id);
+
 }

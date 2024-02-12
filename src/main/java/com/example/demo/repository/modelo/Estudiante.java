@@ -29,6 +29,18 @@ public class Estudiante {
 	private String genero;
 	@Column(name = "estu_fecha_nacimiento")
 	private LocalDateTime fechaNacimiento;
+	@Column(name = "estu_cedula")
+	private String cedula;
+	@Column(name = "estu_edad")
+	private Integer edad;
+	@Column(name = "estu_nacionalidad")
+	private String nacionalidad;
+	@Column(name = "estu_direccion")
+	private String direccion;
+	@Column(name = "estu_estado_civil")
+	private String estadoCivil;
+	@Column(name = "estu_lugar_nacimiento")
+	private String lugarNacimiento;
 
 	@OneToMany(mappedBy = "estudiante")
 	private List<Materia> materias;
@@ -81,4 +93,53 @@ public class Estudiante {
 	public void setMaterias(List<Materia> materias) {
 		this.materias = materias;
 	}
+
+	public String getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(String cedula) {
+		this.cedula = cedula;
+	}
+
+	public Integer getEdad() {
+		return edad;
+	}
+
+	public void setEdad(Integer edad) {
+		this.edad = edad;
+	}
+
+	public String getNacionalidad() {
+		return nacionalidad;
+	}
+
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+	public String getLugarNacimiento() {
+		return lugarNacimiento;
+	}
+
+	public void setLugarNacimiento(String lugarNacimiento) {
+		this.lugarNacimiento = lugarNacimiento;
+	}
+
 }

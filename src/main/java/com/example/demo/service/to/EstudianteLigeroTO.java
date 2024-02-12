@@ -2,7 +2,9 @@ package com.example.demo.service.to;
 
 import java.io.Serializable;
 
-public class EstudianteLigeroTO implements Serializable {
+import org.springframework.hateoas.RepresentationModel;
+
+public class EstudianteLigeroTO extends RepresentationModel<EstudianteLigeroTO> implements Serializable {
 
 	/**
 	 * 
