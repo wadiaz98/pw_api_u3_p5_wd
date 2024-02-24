@@ -1,5 +1,6 @@
 package com.example.demo.service.to;
 
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -123,6 +124,5 @@ public class EstudianteTO extends RepresentationModel<EstudianteTO> implements S
 	public void setLugarNacimiento(String lugarNacimiento) {
 		this.lugarNacimiento = lugarNacimiento;
 	}
-
 
 }
