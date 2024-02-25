@@ -14,7 +14,7 @@ public class JwtUtils {
 	public boolean validateJwtToken(String auth) {
 
 		try {
-			Jwts.parser().setSigningKey("").parseClaimsJws(auth);
+			Jwts.parser().setSigningKey("gfdiofjoaisdjfioadjfioasdjfoiajdfioasjf1221221212aosidjf8af98adf8asdhusdhusdhauihdfudshfuiadhfaishfdaisuhfuiashfiuhdsffasdf").parseClaimsJws(auth);
 			return true;
 		} catch (Exception e) {
 			LOG.error("ERROOOOOOORRRRR", e);
