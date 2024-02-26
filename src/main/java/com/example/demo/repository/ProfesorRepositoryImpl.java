@@ -2,22 +2,22 @@ package com.example.demo.repository;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.repository.modelo.Profesor;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
-
 @Repository
 @Transactional
-public class ProfesorRepositoryImpl implements IProfesorRepository{
+public class ProfesorRepositoryImpl implements IProfesorRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
 	@Override
 	public void insertar(Profesor profesor) {
 		// TODO Auto-generated method stub
@@ -33,10 +33,11 @@ public class ProfesorRepositoryImpl implements IProfesorRepository{
 	@Override
 	public void actualizarParcial(String asignatura, Integer id) {
 		// TODO Auto-generated method stub
-		Query query = this.entityManager.createQuery("UPDATE Profesor p set p.asignatura= :valor1 WHERE p.id= :valor2");
+		javax.persistence.Query query = this.entityManager
+				.createQuery("UPDATE Profesor p set p.asignatura= :valor1 WHERE p.id= :valor2");
 		query.setParameter("valor1", asignatura);
 		query.setParameter("valor2", id);
-		query.executeUpdate();		
+		query.executeUpdate();
 	}
 
 	@Override
@@ -54,9 +55,10 @@ public class ProfesorRepositoryImpl implements IProfesorRepository{
 	@Override
 	public List<Profesor> seleccionarTodos(String genero) {
 		// TODO Auto-generated method stub
-		TypedQuery<Profesor> query = this.entityManager.createQuery("SELECT p FROM Profesor p WHERE p.genero= :valor1", Profesor.class);
+		TypedQuery<Profesor> query = this.entityManager.createQuery("SELECT p FROM Profesor p WHERE p.genero= :valor1",
+				Profesor.class);
 		query.setParameter("valor1", genero);
-		
+
 		return query.getResultList();
 	}
 
